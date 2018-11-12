@@ -8,11 +8,27 @@
 
   "content_scripts": [
     { 
-      "run_at" :"document_end",
+      "run_at" :"document_start",
       "matches": ["*://*.facebook.com/*"],   
-      "js": ["jquery-1.11.3.min.js","cleanup.js"]
+      "js": [
+        "lib/jquery-1.11.3.min.js",
+        "cleanup.js"
+      ]
     }
   ],
+  "permissions": [
+      "storage"
+  ],
+  
+  "background": {
+     "persistent": true,
+     "scripts": ["background.js"]
+  },
+
+  "browser_action": {
+    "default_icon": "icons/broken-link.png",
+    "default_popup": "popup.html"
+  },
 
   "icons": {
       "48": "icons/broken-link.png"

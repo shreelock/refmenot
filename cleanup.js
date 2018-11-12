@@ -14,6 +14,8 @@
             subtree: true
         });
         console.log("clean check called first time");
+        counter = 0;
+        localStorage.setItem("filteredUrls",JSON.stringify([]))
 		checkFn();
 	}
 
@@ -37,6 +39,7 @@
 	}
 
 	doc.ready = ready;
+    chrome.extension.sendMessage({'count': 0})
 	ready('a', function(element) {
 // Second level more aggressive
         let updateElement = function() {
@@ -67,8 +70,8 @@
                 uri = uri.match(/u=([^&#$]+)/i)[1];
             }
             
-            uri = decodeURIComponent(uri);
-            uri = uri.replace(/&?fbclid=[^&#$/]*/gi, '');
+            olduri = decodeURIComponent(uri);
+            uri = olduri.replace(/&?fbclid=[^&#$/]*/gi, '');
             uri = uri.replace(/&?[a-zA-Z_]*?ref=[^&#$/]*/gi, '');
             uri = uri.replace(/&?ref_type=[^&#$/]*/gi, '');
             uri = uri.replace(/&?__xts__[^&#$]*/gi, '');
@@ -77,7 +80,16 @@
             if (uri[uri.length -1] === '?') {
                 uri = uri.substr(0, uri.length-1);
             }
-            
+            if (uri!=olduri) {
+                    // Send message to background.js so we can set the badge text
+                    console.log("reaches Second and further time")
+                    var savedUrls = JSON.parse(localStorage.getItem("filteredUrls"))
+                    savedUrls.push(olduri)
+                    localStorage.setItem("filteredUrls", JSON.stringify(savedUrls))
+                    console.log("reacehs all the times")
+                    console.log("urls saved :", savedUrls)
+                    chrome.extension.sendMessage({'count': savedUrls.length})
+            }
             element.href = uri;
             element.setAttribute("data-lynx-uri", "");
             console.log("cleaned-url ",element.href);
