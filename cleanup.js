@@ -14,8 +14,15 @@
             subtree: true
         });
         console.log("clean check called first time");
-        counter = 0;
-        localStorage.setItem("filteredUrls",JSON.stringify([]))
+
+        if (localStorage.__trackerCounter) {
+            console.log("found existing counter");
+        } 
+        else {
+            console.log("didnt found existing counter");
+            localStorage.__trackerCounter = 0;
+        }
+        // localStorage.setItem("filteredUrls",JSON.stringify([]))
 		checkFn();
 	}
 
@@ -80,15 +87,20 @@
             if (uri[uri.length -1] === '?') {
                 uri = uri.substr(0, uri.length-1);
             }
-            if (uri!=olduri) {
+            if (uri!=olduri && olduri.length > uri.length + 10) {
                     // Send message to background.js so we can set the badge text
-                    console.log("reaches Second and further time")
-                    var savedUrls = JSON.parse(localStorage.getItem("filteredUrls"))
-                    savedUrls.push(olduri)
-                    localStorage.setItem("filteredUrls", JSON.stringify(savedUrls))
-                    console.log("reacehs all the times")
-                    console.log("urls saved :", savedUrls)
-                    chrome.extension.sendMessage({'count': savedUrls.length})
+                    if (localStorage.__trackerCounter) {
+                        localStorage.__trackerCounter = Number(localStorage.__trackerCounter)+1
+                    } 
+                    else {
+                        localStorage.__trackerCounter = 0;
+                    }
+                    // var savedUrls = JSON.parse(localStorage.getItem("filteredUrls"))
+                    // savedUrls.push(olduri)
+                    // localStorage.setItem("filteredUrls", JSON.stringify(savedUrls))
+                    // console.log("urls saved :", savedUrls)
+                    console.log("sending counter :", localStorage.__trackerCounter)
+                    chrome.extension.sendMessage({'count': localStorage.__trackerCounter})
             }
             element.href = uri;
             element.setAttribute("data-lynx-uri", "");
