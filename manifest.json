@@ -2,9 +2,9 @@
 
   "manifest_version": 2,
 
-  "name": "LinkNauseam",
+  "name": "RefMeNot",
   "version": "1.0",
-  "description": "Resolves obfuscated links from on facebook.",
+  "description": "Removes tracking ids from facebook's outbound links.",
 
   "content_scripts": [
     { 

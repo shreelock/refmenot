@@ -8,14 +8,11 @@
 			selector:selector,
 			fn:fn
 		});
-
-		// if (!observer) {
-			observer = new MutationObserver(checkFn);
-			observer.observe(doc.documentElement, {
-                childList: true,
-                subtree: true
-            });
-		// }
+		observer = new MutationObserver(checkFn);
+		observer.observe(doc.documentElement, {
+            childList: true,
+            subtree: true
+        });
         console.log("clean check called first time");
 		checkFn();
 	}
