@@ -1,0 +1,20 @@
+{
+
+  "manifest_version": 2,
+
+  "name": "LinkNauseam",
+  "version": "1.0",
+  "description": "Resolves obfuscated links from on facebook.",
+
+  "content_scripts": [
+    { 
+      "run_at" :"document_end",
+      "matches": ["*://*.facebook.com/*"],   
+      "js": ["jquery-1.11.3.min.js","cleanup.js"]
+    }
+  ],
+
+  "icons": {
+      "48": "icons/broken-link.png"
+    }
+}
