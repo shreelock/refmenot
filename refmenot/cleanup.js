@@ -48,27 +48,7 @@
 	doc.ready = ready;
     chrome.extension.sendMessage({'count': 0})
 	ready('a', function(element) {
-// Second level more aggressive
-        let updateElement = function() {
-            let uri = cleanup();
-            var clean = true;
-            
-            // Strip all the parameters in URL
-            uri = new URL(uri);
-            var domainfilter= ['facebook.com', 'facebookwww.onion'];
-            domainfilter.forEach(function(element) {
-                if (uri.hostname.toString().indexOf(element) === -1) {
-                    clean = false;
-                }
-            });
-            
-            if (clean) {
-                uri = uri.protocol + '//' + uri.hostname + uri.pathname;
-                element.href = uri;
-            }
-        };
 
-        // First level of cleanup
         let cleanup = function() {
             let uri = element.href;
             console.log("pre-cleaned-url ",uri);
@@ -107,25 +87,9 @@
             console.log("cleaned-url ",element.href);
             return uri;
         }
-        
-        var url = element.href.toString();
-        var whitelist = ['#', '/profile.php', '/photo/download', '/groups', '/ad_campaign', '/pages'];
-        var filter = true;
-        whitelist.forEach(function(element) {
-            if (url.indexOf(element) !== -1) {
-                filter = false;
-            }
-        });
-
-        if (filter) {
-            element.onmousedown = updateElement;
-            element.contextmenu = updateElement;
-            element.ontouchstart = updateElement;
-        } else {
-            element.onmousedown = cleanup;
-            element.contextmenu = cleanup;
-            element.ontouchstart = cleanup;
-        }
+        element.onmousedown = cleanup;
+        element.contextmenu = cleanup;
+        element.ontouchstart = cleanup;
 	});
 
 })(this);
